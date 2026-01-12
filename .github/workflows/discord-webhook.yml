@@ -72,13 +72,13 @@ jobs:
                 "juhan0628")
                   MENTIONS="$MENTIONS <@820867737571950592>"
                   ;;
-                "parkch00")
+                "CHPark00-world")
                  MENTIONS="$MENTIONS <@1226385709883981955>"
                  ;;
-                "fen_z")
+                "nelfen")
                   MENTIONS="$MENTIONS <@801386532882743326>"
                   ;;
-                "anne_27964")
+                "anneedesign-ui")
                   MENTIONS="$MENTIONS <@1265182176631062585>"
                   ;;
                   "seunghyeon4069") MENTION="$MENTIONS <@280589926477856778>"
@@ -95,9 +95,9 @@ jobs:
                 "chen4023") MENTIONS="<@683563560063991848>";;
                 "G-jjunny") MENTIONS="<@382857559532371968>";;
                 "juhan0628") MENTIONS="<@820867737571950592>";;
-                "parkch00") MENTIONS="<@1226385709883981955>";;
-                "fen_z") MENTIONS="<@801386532882743326>";;
-                "anne_27964") MENTIONS="<@1265182176631062585>";;
+                "CHPark00-world") MENTIONS="<@1226385709883981955>";;
+                "nelfen") MENTIONS="<@801386532882743326>";;
+                "anneedesign-ui") MENTIONS="<@1265182176631062585>";;
                 "seunghyeon4069") MENTION="<@280589926477856778>";;
                 *) MENTIONS="@$CURRENT_REVIEWER" ;;
               esac
@@ -183,13 +183,13 @@ jobs:
             "juhan0628")
               AUTHOR_MENTION="<@820867737571950592>"
               ;;
-            "parkch00")
+            "CHPark00-world")
               AUTHOR_MENTION="<@1226385709883981955>"
               ;;
-            "fen_z")
+            "nelfen")
               AUTHOR_MENTION="<@801386532882743326>"
               ;;
-              "anne_27964") 
+              "anneedesign-ui") 
               AUTHOR_MENTION="<@1265182176631062585>" 
               ;;
               "seunghyeon4069") 
@@ -242,13 +242,13 @@ jobs:
             "juhan0628")
               AUTHOR_MENTION="<@820867737571950592>"
               ;;
-            "parkch00")
+            "CHPark00-world")
               AUTHOR_MENTION="<@1226385709883981955>"
               ;;
-            "fen_z")
+            "nelfen")
               AUTHOR_MENTION="<@801386532882743326>"
               ;;
-            "anne_27964")
+            "anneedesign-ui")
               AUTHOR_MENTION="<@1265182176631062585>"
               ;;
             "seunghyeon4069")
