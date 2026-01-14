@@ -1,7 +1,8 @@
-import { MainLayout } from '@components';
-import { ROUTES_PATHS } from '@constants';
-import { MainPage, NotFound } from '@pages';
 import { Route, Routes } from 'react-router';
+
+import { MainLayout } from '@/components';
+import { ROUTES_PATHS } from '@/constants';
+import { MainPage, NotFound } from '@/pages';
 
 function App() {
   const ROUTES = [
