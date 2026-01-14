@@ -1,2 +1,2 @@
-export { default as MainPage } from './MainPage';
-export { default as NotFound } from './NotFound';
+export { default as MainPage } from '@/pages/MainPage';
+export { default as NotFound } from '@/pages/NotFound';
