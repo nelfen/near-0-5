@@ -1,4 +1,4 @@
-import { Menu } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { ROUTES_PATHS } from '@/constants';
@@ -9,10 +9,10 @@ type HeaderProps = {
 
 export function Header({ onMenuClick }: HeaderProps) {
   return (
-    <header className="relative z-[60] flex items-center justify-between border-b border-[#E5E7EB] bg-[#070913] px-6 py-3">
+    <header className="sticky top-0 z-[60] flex items-center justify-between border-b border-[#E5E7EB] bg-[#070913] px-6 py-3">
       <div className="flex items-center justify-start gap-3">
         <button className="cursor-pointer text-[#ffffff]" onClick={onMenuClick}>
-          <Menu size={24} />
+          <MenuIcon size={24} />
         </button>
         <Link
           className="text-xl font-bold text-[#FFFFFF]"
