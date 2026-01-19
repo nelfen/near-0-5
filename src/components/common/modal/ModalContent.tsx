@@ -1,4 +1,4 @@
-import { DialogContent } from '@/components/ui/dialog';
+import { DialogContent } from '@/components';
 import { cn } from '@/utils';
 
 type ModalContentProps = {

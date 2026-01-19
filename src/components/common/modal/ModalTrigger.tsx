@@ -1,4 +1,4 @@
-import { DialogTrigger } from '@/components/ui/dialog';
+import { DialogTrigger } from '@/components';
 
 type ModalTriggerProps = {
   children: React.ReactNode;

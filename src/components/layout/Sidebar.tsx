@@ -15,7 +15,7 @@ type SidebarProps = {
   onClose: () => void;
 };
 
-export function Sidebar({ isOpen }: SidebarProps) {
+export default function Sidebar({ isOpen }: SidebarProps) {
   const location = useLocation();
 
   const menuItems = [
@@ -69,5 +69,3 @@ export function Sidebar({ isOpen }: SidebarProps) {
     </aside>
   );
 }
-
-export default Sidebar;
