@@ -1,4 +1,4 @@
-import { DialogDescription } from '@/components/ui/dialog';
+import { DialogDescription } from '@/components';
 
 type ModalDescriptionProps = {
   children: React.ReactNode;

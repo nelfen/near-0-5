@@ -1,4 +1,4 @@
-import { DialogTitle } from '@/components/ui/dialog';
+import { DialogTitle } from '@/components';
 
 type ModalTitleProps = {
   children: React.ReactNode;
