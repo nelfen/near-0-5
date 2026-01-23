@@ -4,16 +4,22 @@ import { KakaoIcon, NaverIcon } from '@/assets';
 import { Button } from '@/components';
 import { ROUTES_PATHS } from '@/constants';
 
-const MAX_SCREEN_WIDTH = 490;
-const LOGIN_SPACING = 30;
+const KAKAO_LOGIN_URL = `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/kakao/login`;
+const NAVER_LOGIN_URL = `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/naver/login`;
 
 export default function LoginPage() {
+  const handleKakoLogin = () => {
+    window.location.href = KAKAO_LOGIN_URL;
+  };
+
+  const handleNaverLogin = () => {
+    window.location.href = NAVER_LOGIN_URL;
+  };
+
   return (
     <div className="flex min-h-screen">
       <div className="flex w-1/2 flex-col items-center justify-center bg-[#070913]">
-        <div
-          className={`flex w-full items-start max-w-[${MAX_SCREEN_WIDTH}px] flex-col justify-center`}
-        >
+        <div className={`flex w-123 flex-col items-start justify-center`}>
           <Link
             className="mb-5 max-w-45 rounded px-2 py-2 text-white opacity-50"
             to={ROUTES_PATHS.MAIN}
@@ -21,21 +27,23 @@ export default function LoginPage() {
             {'< 메인 페이지로 이동'}
           </Link>
 
-          <h1
-            className={`mb-[${LOGIN_SPACING}px] text-4xl font-bold text-white`}
-          >
-            Near 0.5
-          </h1>
-          <p className={`mb-[${LOGIN_SPACING}px] text-gray-400`}>
+          <h1 className={'mb-7 text-4xl font-bold text-white'}>Near 0.5</h1>
+          <p className={'mb-7 text-gray-400'}>
             아티스트와 팬을 연결하는 플랫폼
           </p>
           <div className="flex w-full flex-col space-y-4">
-            <p className={`mb-[${LOGIN_SPACING}px] text-white`}>로그인</p>
-            <Button className="h-13 bg-[#03c75a] text-white hover:bg-[#02b350]">
+            <p className={'mb-7 h-8 w-16 text-white'}>로그인</p>
+            <Button
+              className="h-13 bg-[#03c75a] text-white hover:bg-[#02b350]"
+              onClick={handleNaverLogin}
+            >
               <NaverIcon />
               네이버 간편 로그인
             </Button>
-            <Button className="h-13 bg-[#fee500] text-black hover:bg-[#f5dc00]">
+            <Button
+              className="h-13 bg-[#fee500] text-black hover:bg-[#f5dc00]"
+              onClick={handleKakoLogin}
+            >
               <KakaoIcon />
               카카오 간편 로그인
             </Button>

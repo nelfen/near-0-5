@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router';
 import { MainLayout } from '@/components';
 import { ROUTES_PATHS } from '@/constants';
 import { LoginPage, MainPage, NotFound, StreamingPage } from '@/pages';
+import { KakaoCallback, NaverCallback } from '@/pages';
 
 function App() {
   const ROUTES = [
@@ -26,6 +27,9 @@ function App() {
 
   return (
     <Routes>
+      <Route element={<LoginPage />} path={ROUTES_PATHS.LOGIN} />
+      <Route element={<KakaoCallback />} path="/auth/kakao/callback" />
+      <Route element={<NaverCallback />} path="/auth/naver/callback" />
       <Route element={<MainLayout />}>
         {ROUTES.map(route => (
           <Route element={route.element} key={route.path} path={route.path} />
