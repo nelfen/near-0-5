@@ -3,6 +3,8 @@ import { useState } from 'react';
 import type { MyPageMenuKey } from '@/features/my-page/types';
 
 import AccountInfoCard from '@/features/my-page/components/AccountInfoCard';
+import FavoriteArtistsSection from '@/features/my-page/components/FavoriteArtistsSection';
+import FavoriteGenresSection from '@/features/my-page/components/FavoriteGenresSection';
 import MyPageMenu from '@/features/my-page/components/MyPageMenu';
 import NotificationSettingsCard from '@/features/my-page/components/NotificationSettingsCard';
 import ProfileSummary from '@/features/my-page/components/ProfileSummary';
@@ -60,6 +62,19 @@ export default function MyPage() {
                   // TODO: 회원 탈퇴 API 연결
                 }}
               />
+            </div>
+          </div>
+        )}
+
+        {/* 관심사 탭 */}
+        {activeMenu === 'interest' && (
+          <div className="mt-6 flex flex-col gap-10">
+            {/* 선호 아티스트 */}
+            <FavoriteArtistsSection />
+
+            {/* 선호 장르 */}
+            <div className="rounded-2xl bg-[#1A1F2E] p-8">
+              <FavoriteGenresSection />
             </div>
           </div>
         )}
