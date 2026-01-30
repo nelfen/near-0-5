@@ -2,6 +2,7 @@ export const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export const ROUTES_PATHS = {
   ARTIST: '/artist',
+  ARTIST_LIST: '/artist-list',
   FAVORITE: '/favorite',
   KAKAO_CALLBACK: '/auth/kakao/callback',
   LOGIN: '/login',
@@ -10,7 +11,8 @@ export const ROUTES_PATHS = {
   NOT_FOUND: '*',
   SIGNUP: '/signup',
   STREAMING: '/live-stream',
-};
+  STREAMING_LIST: '/stream_list',
+} as const;
 
 export const API_ROUTES = {
   ENDPOINTS: {

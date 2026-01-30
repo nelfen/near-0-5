@@ -15,12 +15,7 @@ function App() {
   const { accessToken, refreshAccessToken } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
 
-  /**
-   * 새로고침시 토큰 복구
-   *
-   * - 마운트 시에만 한번 실행(빈 의존성 배열 사용)
-   * - 토큰이 없으면 갱신 시도(쿠키에 리프레시 토큰이 있다고 가정)
-   */
+  //새로고침시 토큰 복구
   useEffect(() => {
     const initAuth = async () => {
       if (!accessToken) {

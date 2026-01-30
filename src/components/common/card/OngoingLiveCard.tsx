@@ -1,4 +1,4 @@
-import type { OngoingLiveCardProps } from '@/features/main/types';
+import type { OngoingLiveCardProps } from '@/types/domain';
 
 export default function OngoingLiveCard({
   durationLabel,
