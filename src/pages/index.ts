@@ -1,3 +1,4 @@
+export { default as ArtistListPage } from './ArtistListPage';
 export { default as KakaoCallback } from './KakaoCallback';
 export { default as LoginPage } from './LoginPage';
 export { default as MainPage } from './MainPage';

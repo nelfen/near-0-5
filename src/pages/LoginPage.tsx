@@ -22,6 +22,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen">
+      {/* 서비스 소개 섹션 */}
       <div className="flex w-1/2 flex-col items-center justify-center bg-[#070913]">
         <div className="flex w-123 flex-col items-start justify-center">
           <Link
@@ -45,6 +46,8 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      {/* 비주얼 포인트 섹션 */}
       <div className="flex w-1/2 justify-center bg-linear-to-br from-[#0e0325] via-[#984e9d] to-[#a50a66] px-8">
         <div className="flex w-80 max-w-xs flex-col items-center justify-center gap-6">
           <div className="text-center text-5xl font-bold text-white">
