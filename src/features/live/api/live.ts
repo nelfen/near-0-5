@@ -1,27 +1,7 @@
-import type {
-  StreamCredentials,
-  StreamDetail,
-} from '@/features/live/types/stream';
+import type { StreamCredentials, StreamDetail } from '@/features/live/types';
 
-import { api } from '@/api/api';
+import { api } from '@/api';
 import { API_ROUTES } from '@/constants';
-
-type LoginResponse = {
-  accessToken: string;
-  isAdmin: boolean;
-  refreshToken: string;
-};
-
-export const loginTest = async (userId: number) => {
-  const { data } = await api.post<LoginResponse>(
-    API_ROUTES.ENDPOINTS.TESTLOGIN,
-    null,
-    {
-      params: { userId },
-    },
-  );
-  return data;
-};
 
 export const getStreamDetail = async (sessionId: number) => {
   const { data } = await api.get<StreamDetail>(

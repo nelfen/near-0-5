@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import type { StreamDetail } from '@/features/live/types/stream';
+import type { StreamDetail } from '@/features/live/types';
 
 import {
   getStreamCredentials,
   getStreamDetail,
-  loginTest,
   refreshStreamCredentials,
 } from '@/features/live/api/live';
 
 type UseStreamSessionReturn = {
-  handleDevLogin: () => Promise<void>;
-  handleRefresh: () => Promise<void>;
   isLoading: boolean;
+  loadStreamSession: () => Promise<void>;
   playbackUrl: null | string;
+  refreshPlaybackToken: () => Promise<void>;
   streamDetail: null | StreamDetail;
 };
 
@@ -22,12 +21,9 @@ export const useStreamSession = (sessionId: number): UseStreamSessionReturn => {
   const [playbackUrl, setPlaybackUrl] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDevLogin = async () => {
+  const loadStreamSession = async () => {
     try {
       setIsLoading(true);
-
-      const loginData = await loginTest(2);
-      localStorage.setItem('accessToken', loginData.accessToken);
 
       const detail = await getStreamDetail(sessionId);
       setStreamDetail(detail);
@@ -43,31 +39,35 @@ export const useStreamSession = (sessionId: number): UseStreamSessionReturn => {
     }
   };
 
-  const handleRefresh = async () => {
+  const refreshPlaybackToken = useCallback(async () => {
     if (!sessionId) return;
 
     try {
-      console.log('토큰 재발급 시도');
-
-      const oldUrl = playbackUrl;
-
       const data = await refreshStreamCredentials(sessionId);
 
       setPlaybackUrl(data.playbackUrl);
-
-      console.log('재발급 성공!');
-      console.log('Old URL:', oldUrl);
-      console.log('New URL:', data.playbackUrl);
     } catch (error) {
       console.error('재발급 실패:', error);
     }
-  };
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (!playbackUrl || streamDetail?.status !== 'LIVE') return;
+
+    const REFRESH_INTERVAL = 1000 * 60 * 50;
+
+    const timer = setInterval(() => {
+      refreshPlaybackToken();
+    }, REFRESH_INTERVAL);
+
+    return () => clearInterval(timer);
+  }, [playbackUrl, streamDetail?.status, refreshPlaybackToken]);
 
   return {
-    handleDevLogin,
-    handleRefresh,
     isLoading,
+    loadStreamSession,
     playbackUrl,
+    refreshPlaybackToken,
     streamDetail,
   };
 };

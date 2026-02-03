@@ -45,11 +45,11 @@ export default function ChatPanel({
       {/* Header */}
       <header className="flex items-center justify-between border-b px-4 py-3">
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-gray-900">
+          <span className="text-base font-semibold text-gray-900">
             실시간 채팅
           </span>
           <span
-            className={`text-[10px] ${isConnected ? 'text-green-600' : 'text-red-500'}`}
+            className={`text-xs ${isConnected ? 'text-green-600' : 'text-red-500'}`}
           >
             {isConnected ? '● 연결됨' : '● 연결 끊김'}
           </span>

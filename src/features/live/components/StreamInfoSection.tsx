@@ -1,4 +1,4 @@
-import type { StreamDetail } from '@/features/live/types/stream';
+import type { StreamDetail } from '@/features/live/types';
 
 import { Button } from '@/components';
 
@@ -9,42 +9,70 @@ type StreamInfoSectionProps = {
 export default function StreamInfoSection({
   streamDetail,
 }: StreamInfoSectionProps) {
+  const tags = [
+    streamDetail.category,
+    streamDetail.lineup[0]?.agency || 'agency',
+    streamDetail.lineup[0]?.type || 'GroupType',
+    streamDetail.status,
+  ];
+
   return (
-    <div className="flex flex-col gap-6 rounded-xl bg-[#10131C] p-6">
-      <div>
-        <div className="mb-2 flex items-center gap-2">
-          <span className="rounded bg-red-600 px-1.5 py-0.5 text-xs font-bold">
+    <div className="flex flex-col gap-6">
+      <div className="rounded-xl bg-[#10131C] p-6">
+        <div className="flex items-center gap-2">
+          <span className="rounded bg-[#E7000B] px-2 py-0.5 text-xs font-bold text-[#ffffff]">
             {streamDetail.status}
           </span>
-          <span className="text-xs text-gray-400">
-            {new Date(streamDetail.startAt).toLocaleString()} 시작
+          <span className="text-xs text-[#C9C9C9]">
+            {new Date(streamDetail.startAt).toLocaleString()} 시작됨
           </span>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight italic">
+
+        <h1 className="py-2 text-xl font-bold tracking-tight">
           {streamDetail.concertTitle}
         </h1>
-        <p className="mt-1 text-sm text-gray-400">{streamDetail.sessionName}</p>
-      </div>
+        <p className="pb-4 text-sm text-[#ffffff]">
+          {streamDetail.sessionName}
+        </p>
 
-      <div className="flex items-center justify-between border-t border-b border-gray-700 py-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-linear-to-tr from-pink-500 to-violet-500" />
-          <span className="text-lg font-semibold">
-            {streamDetail.lineup[0]?.name || 'Unknown'}
-          </span>
+        <hr className="border-[#4A5565]" />
+
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-center gap-3">
+            {streamDetail.lineup[0]?.profileImgUrl ? (
+              <img
+                alt="Profile"
+                className="h-10 w-10 rounded-full object-cover"
+                src={streamDetail.lineup[0].profileImgUrl}
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-linear-to-tr from-pink-500 to-violet-500" />
+            )}
+            <span className="text-sm font-semibold">
+              {streamDetail.lineup[0]?.name || 'Unknown'}
+            </span>
+          </div>
+          <Button className="px-6" rounded="full" size="sm" variant="pink">
+            팔로우
+          </Button>
         </div>
-        <Button className="px-6" rounded="full" size="sm" variant="pink">
-          팔로우
-        </Button>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <h3 className="font-bold">방송 정보</h3>
-        <p className="text-sm leading-relaxed whitespace-pre-line text-gray-300">
+      <div className="flex flex-col gap-4 rounded-xl border-2 border-[#4A5565] bg-[#10131C] p-6">
+        <h3 className="text-lg font-bold">방송 정보</h3>
+        <p className="text-sm leading-relaxed whitespace-pre-line text-[#C7C9D9]">
           {streamDetail.description}
         </p>
-        <div className="flex gap-2 text-xs text-blue-400">
-          <span>#{streamDetail.category}</span>
+
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <span
+              className="rounded-full bg-[#C7C9D9] px-3 py-1.5 text-xs text-[#070913]"
+              key={index}
+            >
+              #{tag}
+            </span>
+          ))}
         </div>
       </div>
     </div>

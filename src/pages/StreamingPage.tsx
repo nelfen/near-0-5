@@ -1,25 +1,22 @@
 import { MessageCircleMoreIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 
 import { Button } from '@/components';
-import { StreamPlayer } from '@/features/live/components';
-import ChatPanel from '@/features/live/components/ChatPanel';
-import LoginRequiredModal from '@/features/live/components/LoginRequiredModal';
-import StreamInfoSection from '@/features/live/components/StreamInfoSection';
+import {
+  ChatPanel,
+  LoginRequiredModal,
+  StreamInfoSection,
+  StreamPlayer,
+} from '@/features/live/components';
 import { useStreamSession } from '@/features/live/hooks/useStreamSession';
 
 export default function StreamingPage() {
   const { id } = useParams<{ id: string }>();
   const sessionId = Number(id);
 
-  const {
-    handleDevLogin,
-    handleRefresh,
-    isLoading,
-    playbackUrl,
-    streamDetail,
-  } = useStreamSession(sessionId);
+  const { loadStreamSession, playbackUrl, streamDetail } =
+    useStreamSession(sessionId);
 
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -37,18 +34,14 @@ export default function StreamingPage() {
     return STREAM_MESSAGE[streamDetail.status] ?? STREAM_MESSAGE.ENDED;
   };
 
+  useEffect(() => {
+    loadStreamSession();
+  }, []);
+
   const isStreamLive = streamDetail?.status === 'LIVE' && playbackUrl;
 
   return (
     <main className="mx-auto max-w-main px-6 py-4 text-white">
-      {!streamDetail && (
-        <Button disabled={isLoading} onClick={handleDevLogin}>
-          {isLoading ? '로딩 중...' : '임시 로그인'}
-        </Button>
-      )}
-
-      <Button onClick={handleRefresh}>토큰 재발급</Button>
-
       <section className="flex items-stretch gap-4">
         <div className="flex flex-1 flex-col gap-4">
           <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black">
