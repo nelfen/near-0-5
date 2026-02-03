@@ -20,7 +20,7 @@ export default function ProfileSummary({
   return (
     <section className="flex items-center gap-6">
       <button
-        className="h-24 w-24 cursor-pointer rounded-full border-0 bg-[#2a2f3f] p-0"
+        className="h-24 w-24 cursor-pointer rounded-full bg-[#2a2f3f]"
         onClick={() => fileInputRef.current?.click()}
         style={{
           backgroundImage: profileImage ? `url(${profileImage})` : 'none',

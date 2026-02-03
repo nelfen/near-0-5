@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import type { MyPageMenuKey } from '@/features/my-page/types/menu';
 
 import { api } from '@/api';
+import { API_ROUTES } from '@/constants';
 import { useAuthStore } from '@/features/auth';
 import {
   AccountInfoCard,
@@ -20,29 +21,12 @@ import { favoriteGenresData } from '@/features/my-page/mocks/favoriteGenresData'
 export default function MyPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const tabParam = searchParams.get('tab') as MyPageMenuKey | null;
-
   const clearAccessToken = useAuthStore(state => state.clearAccessToken);
-
-  const handleWithdraw = async () => {
-    try {
-      await api.delete('/users/me');
-      clearAccessToken();
-      navigate('/login');
-    } catch (error) {
-      console.error('회원 탈퇴 실패 :', error);
-    }
-  };
+  const tabParam = searchParams.get('tab') as MyPageMenuKey | null;
 
   const [activeMenu, setActiveMenu] = useState<MyPageMenuKey>(
     tabParam ?? 'interest',
   );
-
-  useEffect(() => {
-    if (tabParam && tabParam !== activeMenu) {
-      setActiveMenu(tabParam);
-    }
-  }, [tabParam, activeMenu]);
 
   const [profile, setProfile] = useState({
     description: '자기소개글이 올 자리입니다',
@@ -51,6 +35,22 @@ export default function MyPage() {
   });
 
   const [profileImage, setProfileImage] = useState<null | string>(null);
+
+  useEffect(() => {
+    if (tabParam && tabParam !== activeMenu) {
+      setActiveMenu(tabParam);
+    }
+  }, [tabParam, activeMenu]);
+
+  const handleWithdraw = async () => {
+    try {
+      await api.delete(API_ROUTES.ENDPOINTS.USER_ME);
+      clearAccessToken();
+      navigate('/login');
+    } catch (error) {
+      console.error('회원 탈퇴 실패 :', error);
+    }
+  };
 
   const handleImageChange = (file: File) => {
     const imageUrl = URL.createObjectURL(file);

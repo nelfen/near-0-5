@@ -1,6 +1,7 @@
+import { AlertTriangle, Calendar, Heart } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '@/components';
+import { Button, Modal, ModalContent, ModalTrigger } from '@/components';
 
 type WithdrawCardProps = {
   onWithdraw: () => void;
@@ -9,49 +10,39 @@ type WithdrawCardProps = {
 export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleConfirm = () => {
     onWithdraw();
     setIsModalOpen(false);
   };
 
   return (
-    <>
-      <section className="pt-6">
-        <Button
-          className="w-full"
-          onClick={handleOpenModal}
-          size="lg"
-          variant="red"
-        >
-          회원 탈퇴
-        </Button>
-      </section>
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <section className="pt-6">
+      <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+        <ModalTrigger asChild>
+          <Button className="w-full" size="lg" variant="red">
+            회원 탈퇴
+          </Button>
+        </ModalTrigger>
+
+        <ModalContent>
           <div className="w-full max-w-md rounded-lg bg-gray-900 p-6">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-red-500">⚠️</span>
+                <AlertTriangle className="text-red-500" size={20} />
                 <h2 className="text-xl font-bold text-white">회원 탈퇴</h2>
               </div>
               <button
                 className="text-gray-400 hover:text-white"
-                onClick={handleCloseModal}
+                onClick={() => setIsModalOpen(false)}
               >
                 x
               </button>
             </div>
+
             <div className="mb-6 rounded bg-red-900/30 p-4">
-              <p className="mb-2 text-sm font-bold text-red-400">
-                ⚠️ 탈퇴하시면 모든 정보가 즉시 삭제됩니다.
+              <p className="mb-2 flex items-center gap-2 text-sm font-bold text-red-400">
+                <AlertTriangle size={16} />
+                탈퇴하시면 모든 정보가 즉시 삭제됩니다.
               </p>
               <p className="text-xs text-gray-400">그래도 탈퇴 하시겠습니까?</p>
               <p className="text-xs text-gray-400">
@@ -59,12 +50,13 @@ export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
                 이전 정보를 불러올 수 없습니다.
               </p>
             </div>
+
             <div className="mb-6">
               <h3 className="mb-3 text-sm font-bold text-white">
                 탈퇴 시 삭제 되는 혜택
               </h3>
               <div className="mb-3 flex items-start gap-3 rounded bg-gray-800 p-3">
-                <span className="text-2xl">💗</span>
+                <Heart className="text-2xl" size={24} />
                 <div>
                   <p className="font-bold text-white">팔로우 아티스트 정보</p>
                   <p className="text-xs text-gray-400">
@@ -73,7 +65,7 @@ export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
                 </div>
               </div>
               <div className="mb-3 flex items-start gap-3 rounded bg-gray-800 p-3">
-                <span className="text-2xl">📅</span>
+                <Calendar className="text-2xl" size={24} />
                 <div>
                   <p className="font-bold text-white">라이브 공연 내역</p>
                   <p className="text-xs text-gray-400">
@@ -82,7 +74,7 @@ export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
                 </div>
               </div>
               <div className="flex items-start gap-3 rounded bg-yellow-900/30 p-3">
-                <span className="text-2xl">⚠️</span>
+                <AlertTriangle className="text-2xl" size={20} />
                 <div>
                   <p className="font-bold text-yellow-400">
                     탈퇴 전 확인하세요.
@@ -96,10 +88,11 @@ export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
                 </div>
               </div>
             </div>
+
             <div className="flex gap-3">
               <Button
                 className="flex-1"
-                onClick={handleCloseModal}
+                onClick={() => setIsModalOpen(false)}
                 variant="ghost"
               >
                 취소하고 돌아가기
@@ -109,8 +102,8 @@ export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
               </Button>
             </div>
           </div>
-        </div>
-      )}
-    </>
+        </ModalContent>
+      </Modal>
+    </section>
   );
 }
