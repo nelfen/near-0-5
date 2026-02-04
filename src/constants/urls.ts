@@ -7,7 +7,7 @@ export const ROUTES_PATHS = {
   KAKAO_CALLBACK: '/auth/kakao/callback',
   LOGIN: '/login',
   MAIN: '/main',
-  MYPAGE: '/mypage',
+  MYPAGE: '/my-page',
   NOT_FOUND: '*',
   SIGNUP: '/signup',
   STREAMING: '/live-stream',
@@ -18,8 +18,11 @@ export const API_ROUTES = {
   ENDPOINTS: {
     LOGOUT: `/auth/logout`,
     REFRESH_ACCESS_TOKEN: `/auth/refresh`,
+    USER_ME: `/users/me`,
   },
   EXTERNAL: {
-    KAKAO_LOGIN: `${BACKEND_BASE_URL}/auth/kakao/login`,
+    GOOGLE_LOGIN: `${BACKEND_BASE_URL}/auth/login?provider=Google`,
+    KAKAO_LOGIN: `${BACKEND_BASE_URL}/auth/login?provider=Kakao`,
+    NAVER_LOGIN: `${BACKEND_BASE_URL}/auth/login?provider=Naver`,
   },
 };

@@ -1,8 +1,12 @@
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import type { MyPageMenuKey } from '@/features/my-page/types/menu';
 
+import { ROUTES_PATHS } from '@/constants';
+import { useAuthStore } from '@/features/auth';
+import { deleteUserAccount } from '@/features/auth/api/authApi';
 import {
   AccountInfoCard,
   FavoriteArtistsSection,
@@ -17,7 +21,8 @@ import { favoriteGenresData } from '@/features/my-page/mocks/favoriteGenresData'
 
 export default function MyPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const navigate = useNavigate();
+  const clearAccessToken = useAuthStore(state => state.clearAccessToken);
   /**
    * URL query 기준 탭 값
    * 기본값: interest
@@ -32,6 +37,31 @@ export default function MyPage() {
   );
 
   /**
+   * TODO:
+   * - 유저 정보 API 연동
+   * - 프로필 수정 API 성공 시 서버 응답 기준으로 갱신
+   */
+  const [profile, setProfile] = useState({
+    description: '자기소개글이 올 자리입니다',
+    followerCount: 4,
+    userName: '김지우',
+  }); // 프로필 정보(임시 데이터)
+
+  const [profileImage, setProfileImage] = useState<null | string>(null); //프로필 이미지 url
+
+  const { mutate: withdraw } = useMutation({
+    mutationFn: deleteUserAccount,
+    onError: error => {
+      console.error('회원 탈퇴 실패: ', error);
+      alert('회원탈퇴에 실패했습니다. 다시 시도해주세요.');
+    },
+    onSuccess: () => {
+      clearAccessToken();
+      navigate(ROUTES_PATHS.LOGIN);
+    },
+  });
+
+  /**
    * URL → state 동기화
    *
    * TODO:
@@ -41,18 +71,7 @@ export default function MyPage() {
     if (tabParam && tabParam !== activeMenu) {
       setActiveMenu(tabParam);
     }
-  }, [tabParam, activeMenu]);
-
-  /**
-   * TODO:
-   * - 유저 정보 API 연동
-   * - 프로필 수정 API 성공 시 서버 응답 기준으로 갱신
-   */
-  const [profile, setProfile] = useState({
-    description: '자기소개글이 올 자리입니다',
-    followerCount: 4,
-    userName: '김지우',
-  });
+  }, [tabParam, activeMenu]); // url의 tab 파라미터가 변경되면 active 동기화
 
   /**
    * TODO:
@@ -62,6 +81,14 @@ export default function MyPage() {
    */
   const handleWithdraw = () => {
     // TODO: withdraw API 연결
+    if (confirm('정말 탈퇴하시겠습니까? 이 작업은 취소할 수 없습니다.')) {
+      withdraw();
+    }
+  };
+
+  const handleImageChange = (file: File) => {
+    const imageUrl = URL.createObjectURL(file);
+    setProfileImage(imageUrl);
   };
 
   /**
@@ -105,17 +132,19 @@ export default function MyPage() {
           <ProfileSummary
             description={profile.description}
             followerCount={profile.followerCount}
+            onImageChange={handleImageChange}
+            profileImage={profileImage}
             userName={profile.userName}
           />
         </div>
       </section>
-
+      {/* 메뉴 탭 (관심사 / 계정 관리) */}
       <section className="mx-auto max-w-7xl px-12">
         <MyPageMenu activeKey={activeMenu} onChange={handleChangeMenu} />
       </section>
-
+      {/* 메뉴별 컨텐츠 */}
       <section className="mx-auto max-w-7xl px-12 pb-20">
-        {/* ================= 관심사 탭 ================= */}
+        {/* 관심사 탭 */}
         {activeMenu === 'interest' && (
           <div className="mt-6 flex flex-col gap-10">
             {/* TODO:
@@ -123,7 +152,6 @@ export default function MyPage() {
                 - 아티스트 클릭 시 상세 페이지 이동
             */}
             <FavoriteArtistsSection artists={favoriteArtistsData} />
-
             {/* TODO:
                 - 관심 장르 API 연동
                 - 선택/해제 시 서버 반영
@@ -133,8 +161,7 @@ export default function MyPage() {
             </div>
           </div>
         )}
-
-        {/* ================= 계정 탭 ================= */}
+        {/* ================= 관심사 탭 ================= */}
         {activeMenu === 'account' && (
           <div className="mt-6 flex flex-col gap-6">
             {/* TODO:
@@ -151,7 +178,6 @@ export default function MyPage() {
                 onEditProfile={handleEditProfile}
               />
             </div>
-
             {/* TODO:
                 - 알림 설정 조회 API
                 - 토글 클릭 시 optimistic update 적용
