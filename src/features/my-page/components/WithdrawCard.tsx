@@ -24,21 +24,12 @@ export default function WithdrawCard({ onWithdraw }: WithdrawCardProps) {
           </Button>
         </ModalTrigger>
 
-        <ModalContent>
+        <ModalContent className="border-0 bg-transparent p-0">
           <div className="w-full max-w-md rounded-lg bg-gray-900 p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="text-red-500" size={20} />
-                <h2 className="text-xl font-bold text-white">회원 탈퇴</h2>
-              </div>
-              <button
-                className="text-gray-400 hover:text-white"
-                onClick={() => setIsModalOpen(false)}
-              >
-                x
-              </button>
+            <div className="mb-4 flex items-center gap-2">
+              <AlertTriangle className="text-red-500" size={20} />
+              <h2 className="text-xl font-bold text-white">회원 탈퇴</h2>
             </div>
-
             <div className="mb-6 rounded bg-red-900/30 p-4">
               <p className="mb-2 flex items-center gap-2 text-sm font-bold text-red-400">
                 <AlertTriangle size={16} />

@@ -33,6 +33,7 @@ export default function ProfileSummary({
       <div className="flex flex-col gap-2">
         <input
           accept="image/*"
+          className="hidden"
           onChange={e => {
             const file = e.target.files?.[0];
             if (file && onImageChange) {
@@ -40,7 +41,6 @@ export default function ProfileSummary({
             }
           }}
           ref={fileInputRef}
-          style={{ display: 'none' }}
           type="file"
         />
         <h1 className="text-xl font-semibold text-white">{userName}</h1>
