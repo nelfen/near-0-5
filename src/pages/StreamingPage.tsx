@@ -1,5 +1,5 @@
 import { MessageCircleMoreIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 
 import { Button } from '@/components';
@@ -15,8 +15,7 @@ export default function StreamingPage() {
   const { id } = useParams<{ id: string }>();
   const sessionId = Number(id);
 
-  const { loadStreamSession, playbackUrl, streamDetail } =
-    useStreamSession(sessionId);
+  const { playbackUrl, streamDetail } = useStreamSession(sessionId);
 
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -33,10 +32,6 @@ export default function StreamingPage() {
     if (!streamDetail) return STREAM_MESSAGE.NONE;
     return STREAM_MESSAGE[streamDetail.status] ?? STREAM_MESSAGE.ENDED;
   };
-
-  useEffect(() => {
-    loadStreamSession();
-  }, []);
 
   const isStreamLive = streamDetail?.status === 'LIVE' && playbackUrl;
 

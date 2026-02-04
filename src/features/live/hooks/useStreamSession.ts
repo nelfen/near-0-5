@@ -1,73 +1,38 @@
-import { useCallback, useEffect, useState } from 'react';
-
-import type { StreamDetail } from '@/features/live/types';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   getStreamCredentials,
   getStreamDetail,
-  refreshStreamCredentials,
 } from '@/features/live/api/live';
 
-type UseStreamSessionReturn = {
-  isLoading: boolean;
-  loadStreamSession: () => Promise<void>;
-  playbackUrl: null | string;
-  refreshPlaybackToken: () => Promise<void>;
-  streamDetail: null | StreamDetail;
-};
+export const useStreamSession = (sessionId: number) => {
+  const detailQuery = useQuery({
+    enabled: !!sessionId,
+    queryFn: () => getStreamDetail(sessionId),
+    queryKey: ['streamDetail', sessionId],
+  });
 
-export const useStreamSession = (sessionId: number): UseStreamSessionReturn => {
-  const [streamDetail, setStreamDetail] = useState<null | StreamDetail>(null);
-  const [playbackUrl, setPlaybackUrl] = useState<null | string>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const streamDetail = detailQuery.data;
 
-  const loadStreamSession = async () => {
-    try {
-      setIsLoading(true);
+  const tokenQuery = useQuery({
+    enabled: !!streamDetail && streamDetail.status === 'LIVE',
+    queryFn: async () => {
+      const data = await getStreamCredentials(sessionId);
+      return data.playbackUrl;
+    },
+    queryKey: ['streamToken', sessionId],
 
-      const detail = await getStreamDetail(sessionId);
-      setStreamDetail(detail);
+    refetchInterval: 1000 * 60 * 50,
 
-      if (detail.status === 'LIVE') {
-        const credentials = await getStreamCredentials(sessionId);
-        setPlaybackUrl(credentials.playbackUrl);
-      }
-    } catch (error) {
-      console.error('에러 발생:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const refreshPlaybackToken = useCallback(async () => {
-    if (!sessionId) return;
-
-    try {
-      const data = await refreshStreamCredentials(sessionId);
-
-      setPlaybackUrl(data.playbackUrl);
-    } catch (error) {
-      console.error('재발급 실패:', error);
-    }
-  }, [sessionId]);
-
-  useEffect(() => {
-    if (!playbackUrl || streamDetail?.status !== 'LIVE') return;
-
-    const REFRESH_INTERVAL = 1000 * 60 * 50;
-
-    const timer = setInterval(() => {
-      refreshPlaybackToken();
-    }, REFRESH_INTERVAL);
-
-    return () => clearInterval(timer);
-  }, [playbackUrl, streamDetail?.status, refreshPlaybackToken]);
+    refetchOnWindowFocus: false,
+  });
 
   return {
-    isLoading,
-    loadStreamSession,
-    playbackUrl,
-    refreshPlaybackToken,
-    streamDetail,
+    isLoading: detailQuery.isLoading || tokenQuery.isLoading,
+    loadStreamSession: detailQuery.refetch,
+    playbackUrl: tokenQuery.data || null,
+
+    refreshPlaybackToken: tokenQuery.refetch,
+    streamDetail: streamDetail || null,
   };
 };
