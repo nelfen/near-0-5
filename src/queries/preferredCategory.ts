@@ -22,10 +22,7 @@ export const useAddPreferredCategoryMutation = () => {
     AddPreferredCategoryRequest
   >({
     mutationFn: async body => {
-      const { data } = await api.post(
-        '/api/v1/users/me/preferred-categories',
-        body,
-      );
+      const { data } = await api.post('/users/me/preferred-categories', body);
       return data;
     },
     onSuccess: () => {
@@ -45,7 +42,7 @@ export const useDeletePreferredCategoryMutation = () => {
 
   return useMutation<void, Error, DeletePreferredCategoryParams>({
     mutationFn: async ({ categoryId }) => {
-      await api.delete(`/api/v1/users/me/preferred-categories/${categoryId}`);
+      await api.delete(`/users/me/preferred-categories/${categoryId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

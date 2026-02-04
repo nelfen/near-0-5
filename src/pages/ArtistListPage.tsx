@@ -1,5 +1,3 @@
-// src/pages/ArtistListPage.tsx (전체 예시)
-
 import { FollowButton } from '@/components';
 import HeroBanner from '@/features/main/components/HeroBanner';
 import { useArtistListQuery } from '@/queries/artist';
@@ -7,24 +5,24 @@ import { useArtistListQuery } from '@/queries/artist';
 const MOCK_ARTISTS = [
   {
     agency: '쏘스뮤직',
-    follower_count: 1234567,
+    followerCount: 1234567,
     id: 1,
     name: 'LE SSERAFIM',
-    profile_image: '/images/artist-le-sserafim.png',
+    profileImage: '/images/artist-le-sserafim.png',
   },
   {
     agency: 'ADOR',
-    follower_count: 2345678,
+    followerCount: 2345678,
     id: 2,
     name: 'NewJeans',
-    profile_image: '/images/artist-newjeans.png',
+    profileImage: '/images/artist-newjeans.png',
   },
   {
     agency: 'BIGHIT MUSIC',
-    follower_count: 3456789,
+    followerCount: 3456789,
     id: 3,
     name: 'BTS',
-    profile_image: '/images/artist-bts.png',
+    profileImage: '/images/artist-bts.png',
   },
 ];
 
@@ -38,10 +36,10 @@ export default function ArtistListPage() {
     ? MOCK_ARTISTS
     : rawArtists.map(artist => ({
         agency: artist.agency,
-        follower_count: artist.follower_count,
+        followerCount: artist.followerCount,
         id: artist.id,
         name: artist.name,
-        profile_image: artist.profile_image,
+        profileImage: artist.profileImage,
       }));
 
   const showEmptyMessage = !useMock && isSuccess && artists.length === 0;
@@ -73,12 +71,16 @@ export default function ArtistListPage() {
                 key={artist.id}
               >
                 <div className="h-66.5 w-full overflow-hidden rounded-2xl bg-gray-700">
-                  {artist.profile_image && (
+                  {artist.profileImage ? (
                     <img
                       alt={artist.name}
                       className="h-full w-full object-cover"
-                      src={artist.profile_image}
+                      src={artist.profileImage}
                     />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-sm text-gray-400">
+                      No Image
+                    </div>
                   )}
                 </div>
 
@@ -90,7 +92,7 @@ export default function ArtistListPage() {
                       </h3>
                       <p className="text-xs text-[#D9D9D9]">{artist.agency}</p>
                       <p className="text-xs text-[#D9D9D9]">
-                        {artist.follower_count.toLocaleString()} 팔로워
+                        {artist.followerCount} 팔로워
                       </p>
                     </div>
 

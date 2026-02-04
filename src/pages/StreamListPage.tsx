@@ -1,4 +1,3 @@
-// src/pages/StreamListPage.tsx
 import { useState } from 'react';
 
 import { Tabs } from '@/components';

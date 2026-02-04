@@ -14,7 +14,7 @@ export type Category = {
 export const useCategoriesQuery = () =>
   useQuery<CategoriesResponse>({
     queryFn: async () => {
-      const { data } = await api.get('/api/v1/categories');
+      const { data } = await api.get('/categories');
       return data;
     },
     queryKey: ['categories'],

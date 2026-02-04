@@ -8,23 +8,19 @@ export type ArtistSectionProps = {
   title: string;
 };
 
+const MAX_VISIBLE = 8;
+
 const MOCK_ARTISTS = [
-  {
-    id: 1,
-    name: 'LE SSERAFIM',
-    profile_image: '/images/artist-le-sserafim.png',
-  },
-  {
-    id: 2,
-    name: 'NewJeans',
-    profile_image: '/images/artist-newjeans.png',
-  },
-  {
-    id: 3,
-    name: 'BTS',
-    profile_image: '/images/artist-bts.png',
-  },
+  { id: 1, name: 'LE SSERAFIM', profileImage: null },
+  { id: 2, name: 'NewJeans', profileImage: null },
+  { id: 3, name: 'BTS', profileImage: null },
 ];
+
+const hasRealImage = (profileImage: null | string) => {
+  if (!profileImage) return false;
+  if (profileImage === 'noimage') return false;
+  return true;
+};
 
 export default function ArtistSection({ title }: ArtistSectionProps) {
   const navigate = useNavigate();
@@ -34,19 +30,15 @@ export default function ArtistSection({ title }: ArtistSectionProps) {
 
   const useMock = isError || !isSuccess || rawList.length === 0;
 
-  const list = useMock
+  const baseList = useMock
     ? MOCK_ARTISTS
     : rawList.map(artist => ({
         id: artist.id,
         name: artist.name,
-        profile_image: artist.profile_image,
+        profileImage: artist.profileImage,
       }));
 
-  console.log('[ArtistSection] data =', data);
-  console.log('[ArtistSection] rawList.length =', rawList.length);
-  console.log('[ArtistSection] useMock =', useMock);
-  console.log('[ArtistSection] isSuccess =', isSuccess);
-  console.log('[ArtistSection] isError =', isError);
+  const list = baseList.slice(0, MAX_VISIBLE);
 
   const isLoadingState = isLoading && !data && !useMock;
   const showEmptyMessage = !useMock && isSuccess && list.length === 0;
@@ -69,28 +61,32 @@ export default function ArtistSection({ title }: ArtistSectionProps) {
             추천 아티스트가 없습니다.
           </div>
         ) : (
-          <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-4">
-            {list.map(({ id, name, profile_image }) => (
-              <article
-                className="flex w-34.5 shrink-0 flex-col items-center justify-center"
-                key={id}
-              >
-                <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-transparent transition-colors hover:border-[#DC196D]">
-                  {profile_image ? (
-                    <img
-                      alt={name}
-                      className="h-full w-full object-cover"
-                      src={profile_image}
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-700 text-[10px] text-gray-400">
-                      No Image
-                    </div>
-                  )}
-                </div>
-                <p className="mt-2 text-xs font-medium text-white">{name}</p>
-              </article>
-            ))}
+          <div className="flex gap-4 pb-4">
+            {list.map(({ id, name, profileImage }) => {
+              const showRealImage = hasRealImage(profileImage);
+
+              return (
+                <article
+                  className="flex w-34.5 flex-col items-center justify-center"
+                  key={id}
+                >
+                  <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-transparent transition-colors hover:border-[#DC196D]">
+                    {showRealImage ? (
+                      <img
+                        alt={name}
+                        className="h-full w-full object-cover"
+                        src={profileImage as string}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gray-700 text-[10px] text-gray-400">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-2 text-xs font-medium text-white">{name}</p>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

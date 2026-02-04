@@ -4,7 +4,7 @@ export type ConcertCardProps = {
   dateLabel: string;
   locationLabel: string;
   onClickAlert?: () => void;
-  thumbnailUrl: string;
+  thumbnailUrl?: null | string;
   timeLabel: string;
   title: string;
 };
@@ -17,16 +17,24 @@ export default function ConcertCard({
   timeLabel,
   title,
 }: ConcertCardProps) {
+  console.log('ConcertCard : ', title);
+
+  const hasThumbnail =
+    typeof thumbnailUrl === 'string' && thumbnailUrl.length > 0;
+
   return (
     <article className="group flex h-90.75 flex-col overflow-hidden rounded-3xl border border-[#4A5565] bg-[#101828] transition-colors duration-200 hover:border-[#DC196D]">
-      <div className="relative h-52.5 w-full overflow-hidden">
-        {thumbnailUrl && (
+      <div className="relative flex h-52.5 w-full items-center justify-center overflow-hidden bg-[#111827]">
+        {hasThumbnail ? (
           <img
             alt={title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            src={thumbnailUrl}
+            src={thumbnailUrl as string}
           />
+        ) : (
+          <span className="text-sm font-semibold text-gray-400">NO IMAGE</span>
         )}
+
         <div className="absolute top-4 left-4 rounded-full bg-[#E11DFF] px-5 py-1.5 text-xs leading-none font-semibold text-white">
           {dateLabel}
         </div>
@@ -38,6 +46,7 @@ export default function ConcertCard({
           <p className="truncate text-right">{locationLabel}</p>
         </div>
       </div>
+
       <div className="flex flex-1 flex-col justify-between px-4 py-3">
         <h3 className="line-clamp-2 text-lg leading-tight font-bold text-white">
           {title}

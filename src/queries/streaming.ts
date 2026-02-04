@@ -2,34 +2,70 @@ import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/api';
 
-export type StreamSession = {
+/**
+ * 2) 프론트에서 사용할 타입
+ *    응답과 구조가 동일하니까 그대로 재사용해도 됨
+ */
+export type StreamSession = StreamSessionResponse;
+
+export type StreamSessions = StreamSessionsResponse;
+
+export type StreamSessionStatus = 'ENDED' | 'LIVE' | 'READY';
+
+/**
+ * 1) 백엔드 응답 (api.ts에서 이미 toCamel 처리된 상태, 즉 camelCase)
+ */
+type StreamSessionResponse = {
   category: string;
-  concert_title: string;
+  concertTitle: string;
   id: number;
-  session_name: string;
-  start_at: string;
+  sessionName: string;
+  startAt: string;
   status: StreamSessionStatus;
-  thumbnail_url: null | string;
+  thumbnailUrl: null | string;
 };
 
-export type StreamSessionsResponse = {
-  items: StreamSession[];
-  next_cursor: null | number;
+type StreamSessionsResponse = {
+  items: StreamSessionResponse[];
+  nextCursor: null | number;
 };
 
-export type StreamSessionStatus = 'COMPLETED' | 'ONGOING' | 'READY';
+const STREAMING_KEYS = {
+  detail: (id: number) => ['streams', 'session', id] as const,
+  list: (status: StreamSessionStatus) =>
+    ['streams', 'sessions', status] as const,
+};
 
+/**
+ * 응답 → UI 모델 (실질적으로는 그대로 반환)
+ */
+const toStreamSession = (src: StreamSessionResponse): StreamSession => src;
+
+/**
+ * 3) 목록 쿼리
+ */
 export const useStreamingListQuery = (status: StreamSessionStatus) =>
-  useQuery<StreamSessionsResponse>({
+  useQuery<StreamSessions>({
     queryFn: async () => {
-      const { data } = await api.get('/api/v1/streams/sessions', {
-        params: { status },
-      });
-      return data;
+      const { data } = await api.get<StreamSessionsResponse>(
+        '/streams/sessions',
+        { params: { status } },
+      );
+
+      // 여기서 data는 이미 camelCase 구조임 (api.ts의 toCamel 때문에)
+      // 예: { items: [{ concertTitle: '...', sessionName: '...' }], nextCursor: null }
+
+      return {
+        items: data.items.map(toStreamSession),
+        nextCursor: data.nextCursor,
+      };
     },
-    queryKey: ['streams', 'sessions', status],
+    queryKey: STREAMING_KEYS.list(status),
   });
 
+/**
+ * 4) 상세 쿼리
+ */
 export type StreamSessionDetail = StreamSession & {
   description?: null | string;
 };
@@ -38,8 +74,16 @@ export const useStreamingDetailQuery = (id: number) =>
   useQuery<StreamSessionDetail>({
     enabled: !!id,
     queryFn: async () => {
-      const { data } = await api.get(`/api/v1/streams/sessions/${id}`);
-      return data;
+      const { data } = await api.get<
+        StreamSessionResponse & {
+          description?: null | string;
+        }
+      >(`/streams/sessions/${id}`);
+
+      return {
+        ...toStreamSession(data),
+        description: data.description ?? null,
+      };
     },
-    queryKey: ['streams', 'session', id],
+    queryKey: STREAMING_KEYS.detail(id),
   });

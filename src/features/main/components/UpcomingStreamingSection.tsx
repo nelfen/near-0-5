@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { ConcertCard, SectionHeader } from '@/components';
@@ -14,40 +14,6 @@ export type UpcomingStreamingSectionProps = {
   title: string;
 };
 
-const FALLBACK_THUMBNAILS = [
-  '/images/Upcoming-1.png',
-  '/images/Upcoming-2.png',
-  '/images/Upcoming-3.png',
-  '/images/Upcoming-4.png',
-];
-
-const getFallbackThumbnail = (index: number) =>
-  FALLBACK_THUMBNAILS[index % FALLBACK_THUMBNAILS.length];
-
-const MOCK_UPCOMING_LIST = [
-  {
-    concert_title: 'LE SSERAFIM 2024 WORLD TOUR',
-    id: 1,
-    session_name: '서울 올림픽공원 KSPO DOME',
-    start_at: '2026-09-15 20:00 (KST)',
-    thumbnail_url: '/images/Upcoming-1.png',
-  },
-  {
-    concert_title: 'CRAZY 앨범 쇼케이스 라이브',
-    id: 2,
-    session_name: '서울 올림픽공원 KSPO DOME',
-    start_at: '2026-09-08 20:00 (KST)',
-    thumbnail_url: '/images/Upcoming-2.png',
-  },
-  {
-    concert_title: '팬사인회 생중계',
-    id: 3,
-    session_name: '광주 한국문화회관',
-    start_at: '2026-09-10 15:00 (KST)',
-    thumbnail_url: '/images/Upcoming-3.png',
-  },
-];
-
 export default function UpcomingStreamingSection({
   showMoreButton = true,
   title,
@@ -55,15 +21,14 @@ export default function UpcomingStreamingSection({
   const navigate = useNavigate();
   const { isLoggedIn } = useAuthStore();
 
-  const { data, isError, isSuccess } = useStreamingListQuery('READY');
+  const { data, isError, isFetched } = useStreamingListQuery('READY');
+  const list = data?.items ?? [];
 
-  // API 리스트
-  const rawList = data?.items ?? [];
-  // 리스트가 비어 있으면 더미 데이터로 대체
-  const list = rawList.length === 0 ? MOCK_UPCOMING_LIST : rawList;
+  useEffect(() => {
+    console.log('UpcomingStreamingSection list:', list);
+  }, [list]);
 
-  // 스크린샷용: 카드가 항상 보이게 빈 메시지는 에러일 때만 사용
-  const showEmptyMessage = isError && list.length === 0 && isSuccess;
+  const showEmptyMessage = isError && isFetched && list.length === 0;
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedConcertTitle, setSelectedConcertTitle] = useState<
@@ -107,17 +72,15 @@ export default function UpcomingStreamingSection({
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {list.slice(0, 3).map((concert, index) => (
+            {list.slice(0, 3).map(concert => (
               <ConcertCard
-                dateLabel={concert.start_at}
+                dateLabel={concert.startAt}
                 key={concert.id}
-                locationLabel={concert.session_name}
-                onClickAlert={() => handleClickAlert(concert.concert_title)}
-                thumbnailUrl={
-                  concert.thumbnail_url || getFallbackThumbnail(index)
-                }
+                locationLabel={concert.sessionName}
+                onClickAlert={() => handleClickAlert(concert.concertTitle)}
+                thumbnailUrl={concert.thumbnailUrl ?? null}
                 timeLabel=""
-                title={concert.concert_title}
+                title={concert.concertTitle}
               />
             ))}
           </div>
