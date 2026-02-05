@@ -1,4 +1,3 @@
-// src/routes.tsx
 import { ROUTES_PATHS } from '@/constants';
 import {
   ArtistListPage,
@@ -8,6 +7,7 @@ import {
   SocialLoginRedirect,
   StreamingPage,
   StreamListPage,
+  ConcertDetailPage,
 } from '@/pages';
 
 export const PUBLIC_ROUTES = [
@@ -45,5 +45,9 @@ export const PROTECTED_ROUTES = [
   {
     element: <MyPage />,
     path: ROUTES_PATHS.MYPAGE,
+  },
+  {
+    element: <ConcertDetailPage />,
+    path: ROUTES_PATHS.CONCERT_DETAIL,
   },
 ];

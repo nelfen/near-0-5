@@ -7,6 +7,7 @@ export const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 export const ROUTES_PATHS = {
   ARTIST: '/artist',
   ARTIST_LIST: '/artist-list',
+  CONCERT_DETAIL: '/concert/:id',
   FAVORITE: '/favorite',
   LOGIN: '/login',
   MAIN: '/',
