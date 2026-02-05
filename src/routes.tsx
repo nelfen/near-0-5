@@ -1,7 +1,7 @@
-// src/routes.tsx
 import { ROUTES_PATHS } from '@/constants';
 import {
   ArtistListPage,
+  ConcertDetailPage,
   LoginPage,
   MainPage,
   MyPage,
@@ -39,11 +39,15 @@ export const PUBLIC_ROUTES_WITH_LAYOUT = [
 export const PROTECTED_ROUTES = [
   {
     element: <StreamingPage />,
-    path: ROUTES_PATHS.STREAMING,
+    path: ROUTES_PATHS.STREAMING_DETAIL,
   },
 
   {
     element: <MyPage />,
     path: ROUTES_PATHS.MYPAGE,
+  },
+  {
+    element: <ConcertDetailPage />,
+    path: ROUTES_PATHS.CONCERT_DETAIL,
   },
 ];

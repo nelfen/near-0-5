@@ -7,6 +7,7 @@ export const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 export const ROUTES_PATHS = {
   ARTIST: '/artist',
   ARTIST_LIST: '/artist-list',
+  CONCERT_DETAIL: '/concert/:id',
   FAVORITE: '/favorite',
   LOGIN: '/login',
   MAIN: '/',
@@ -14,7 +15,6 @@ export const ROUTES_PATHS = {
   NOT_FOUND: '*',
   SIGNUP: '/signup',
   SOCIAL_LOGIN_REDIRECT: '/auth/oauth2/callback',
-  STREAMING: '/live-stream',
   STREAMING_DETAIL: '/live-stream/:id',
   STREAMING_LIST: '/stream-list',
 } as const;

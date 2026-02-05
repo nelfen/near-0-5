@@ -1,0 +1,166 @@
+import {
+  CalendarIcon,
+  CheckCircle2Icon,
+  ClockIcon,
+  MessageCircleIcon,
+  PlayIcon,
+  UserIcon,
+} from 'lucide-react';
+import { useNavigate, useParams } from 'react-router';
+
+import { ConcertMockImage, ProfileMockImage } from '@/assets';
+import { Button } from '@/components';
+import { useStreamSession } from '@/features/live/hooks';
+
+export default function ConcertDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const sessionId = Number(id);
+  const navigate = useNavigate();
+
+  const { isError, isLoading, streamDetail } = useStreamSession(sessionId);
+
+  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = ConcertMockImage;
+  };
+
+  const handleProfileImgError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
+  ) => {
+    e.currentTarget.src = ProfileMockImage;
+  };
+
+  if (isLoading || isError || !streamDetail) {
+    return (
+      <div className="p-8 text-white">
+        {isLoading ? '로딩 중...' : '공연 정보를 불러올 수 없습니다.'}
+      </div>
+    );
+  }
+
+  const mainArtist =
+    streamDetail.lineup.find(artist => artist.isMain) || streamDetail.lineup[0];
+
+  const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return {
+      date: `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`,
+      time: `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
+    };
+  };
+
+  const startTime = formatDateTime(streamDetail.startAt);
+  const endTime = formatDateTime(streamDetail.endAt);
+
+  const handleGoWatch = () => {
+    navigate(`/live-stream/${sessionId}`);
+  };
+
+  const CONCERT_FEATURES = [
+    { icon: CheckCircle2Icon, id: 1, text: 'HD 고화질 스트리밍' },
+    { icon: MessageCircleIcon, id: 2, text: '실시간 채팅 참여' },
+    { icon: UserIcon, id: 3, text: '이모지 소통 가능' },
+  ];
+
+  return (
+    <div className="mx-auto min-h-screen w-full max-w-main bg-[#1A1F2E] px-6 py-8 text-white">
+      <div className="grid grid-cols-1 gap-10 xl:grid-cols-12">
+        <div className="space-y-4 lg:col-span-8">
+          <div className="w-full overflow-hidden rounded-2xl bg-[#10131C] shadow-2xl">
+            <div className="relative aspect-video w-full">
+              <img
+                alt={streamDetail.concertTitle}
+                className="h-full w-full rounded-2xl object-cover"
+                onError={handleImgError}
+                src={streamDetail.thumbnailUrl || ConcertMockImage}
+              />
+            </div>
+
+            <div className="p-8">
+              <div className="mb-8">
+                <h1 className="text-2xl leading-tight font-bold">
+                  {streamDetail.concertTitle}
+                </h1>
+                {streamDetail.sessionName && (
+                  <p className="mt-2 text-lg font-medium text-[#94A3B8]">
+                    {streamDetail.sessionName}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center space-x-5">
+                <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-slate-600 bg-slate-700">
+                  <img
+                    alt={mainArtist?.name || 'Artist'}
+                    className="h-full w-full object-cover"
+                    onError={handleProfileImgError}
+                    src={mainArtist?.profileImgUrl || ProfileMockImage}
+                  />
+                </div>
+                <div>
+                  <p className="text-lg font-bold">
+                    {mainArtist?.name || 'Unknown Artist'}
+                  </p>
+                  <p className="text-slate-400">{mainArtist?.agency}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="rounded-xl bg-[#10131C] p-6">
+              <div className="mb-2 flex items-center gap-3 text-slate-400">
+                <CalendarIcon size={20} />
+                <span className="text-sm font-medium">시작 예정 시간</span>
+              </div>
+              <p className="text-xl font-bold">{startTime.date}</p>
+              <p className="font-bold text-pink-500">{startTime.time} 시작</p>
+            </div>
+            <div className="rounded-xl bg-[#10131C] p-6">
+              <div className="mb-2 flex items-center gap-3 text-slate-400">
+                <ClockIcon size={20} />
+                <span className="text-sm font-medium">종료 예정 시간</span>
+              </div>
+              <p className="text-xl font-bold">{endTime.date}</p>
+              <p className="font-bold text-slate-500">
+                {endTime.time} 종료 예정
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-[#10131C] p-8 shadow-lg">
+            <h3 className="mb-4 text-xl font-bold text-white">콘서트 설명</h3>
+            <div className="leading-relaxed whitespace-pre-line text-[#CBD5E1]">
+              {streamDetail.description}
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-4">
+          <div className="sticky top-8 rounded-2xl bg-[#10131C] p-6 shadow-xl">
+            <h3 className="mb-6 text-xl font-bold">
+              {streamDetail.concertTitle}
+            </h3>
+
+            <ul className="mb-8 space-y-4">
+              {CONCERT_FEATURES.map(({ icon: Icon, id, text }) => (
+                <li className="flex items-center gap-3 text-slate-300" key={id}>
+                  <Icon className="text-[#DC196D]" size={20} />
+                  {text}
+                </li>
+              ))}
+            </ul>
+
+            <Button
+              className="h-14 w-full py-4 text-lg font-bold shadow-lg shadow-pink-500/20"
+              onClick={handleGoWatch}
+              variant="pink"
+            >
+              <PlayIcon />
+              보러가기
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
