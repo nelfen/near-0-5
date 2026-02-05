@@ -1,13 +1,13 @@
 import { ROUTES_PATHS } from '@/constants';
 import {
   ArtistListPage,
+  ConcertDetailPage,
   LoginPage,
   MainPage,
   MyPage,
   SocialLoginRedirect,
   StreamingPage,
   StreamListPage,
-  ConcertDetailPage,
 } from '@/pages';
 
 export const PUBLIC_ROUTES = [
@@ -39,7 +39,7 @@ export const PUBLIC_ROUTES_WITH_LAYOUT = [
 export const PROTECTED_ROUTES = [
   {
     element: <StreamingPage />,
-    path: ROUTES_PATHS.STREAMING,
+    path: ROUTES_PATHS.STREAMING_DETAIL,
   },
 
   {
