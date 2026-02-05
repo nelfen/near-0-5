@@ -6,6 +6,8 @@ import type {
   ServerEvent,
 } from '@/features/live/types/chat';
 
+import { mapServerEventToChatMessage } from '@/features/live/utils/mapServerEventToChatMessage';
+
 type UseLiveChatParams = {
   streamingId: number;
 };
@@ -18,7 +20,7 @@ export function useLiveChat({ streamingId }: UseLiveChatParams) {
 
   useEffect(() => {
     const socket = new WebSocket(
-      `wss://api.near05.com/v1/streamings/${streamingId}/chat`,
+      `wss://d15qsadcdtxaqn.cloudfront.net/api/v1/streaming/10/chat`,
     );
 
     socketRef.current = socket;
@@ -39,12 +41,16 @@ export function useLiveChat({ streamingId }: UseLiveChatParams) {
       const serverEvent: ServerEvent = JSON.parse(event.data);
 
       if (serverEvent.type === 'recent') {
-        const recentMessages = serverEvent.items.map(mapServerEventToMessage);
+        const recentMessages = serverEvent.items.map(item =>
+          mapServerEventToChatMessage(item),
+        );
+
         setMessages(recentMessages);
         return;
       }
 
-      setMessages(prev => [...prev, mapServerEventToMessage(serverEvent)]);
+      const chatMessage = mapServerEventToChatMessage(serverEvent);
+      setMessages(prev => [...prev, chatMessage]);
     };
 
     return () => {
@@ -73,19 +79,5 @@ export function useLiveChat({ streamingId }: UseLiveChatParams) {
     isConnected,
     messages,
     sendMessage,
-  };
-}
-
-//서버 이벤트를 UI에서 사용하는 ChatMessage 형태로 변환합니다.
-function mapServerEventToMessage(
-  event: Exclude<ServerEvent, { type: 'recent' }>,
-): ChatMessage {
-  return {
-    kind: event.type,
-    messageId: event.message_id,
-    roomId: event.room_id,
-    text: event.text,
-    ts: event.ts,
-    userId: event.user_id,
   };
 }
