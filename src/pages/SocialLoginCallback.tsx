@@ -1,22 +1,34 @@
 import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 
 import { ROUTES_PATHS } from '@/constants';
-import { useAuthStore } from '@/features/auth';
+import {
+  isValidSocialLoginProvider,
+  REDIRECT_KEY,
+  useAuthStore,
+} from '@/features/auth';
 
 const SEARCH_PARAMS = {
   ACCESS_TOKEN: 'access_token',
   IS_NEW_USER: 'is_new_user',
 };
 
-const REDIRECT_KEY = 'login_redirect';
-
-export default function KakaoCallback() {
+function SocialLoginCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const setAccessToken = useAuthStore(state => state.setAccessToken);
+  const { provider } = useParams<{
+    provider: string;
+  }>();
 
   useEffect(() => {
+    if (!isValidSocialLoginProvider(provider)) {
+      console.error(`잘못된 소셜 로그인 제공자입니다: ${provider}`);
+      navigate(ROUTES_PATHS.LOGIN, { replace: true });
+
+      return;
+    }
+
     const accessToken = searchParams.get(SEARCH_PARAMS.ACCESS_TOKEN);
 
     if (accessToken) {
@@ -25,6 +37,7 @@ export default function KakaoCallback() {
       const REDIRECT_PATH = localStorage.getItem(REDIRECT_KEY);
 
       if (REDIRECT_PATH) {
+        // 직전 페이지가 있는 경우 직전 페이지로 이동
         localStorage.removeItem(REDIRECT_KEY);
 
         navigate(REDIRECT_PATH, { replace: true });
@@ -36,7 +49,7 @@ export default function KakaoCallback() {
 
       navigate(ROUTES_PATHS.LOGIN, { replace: true });
     }
-  }, [searchParams, navigate, setAccessToken]);
+  }, [searchParams, navigate, setAccessToken, provider]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#070913]">
@@ -47,3 +60,5 @@ export default function KakaoCallback() {
     </div>
   );
 }
+
+export default SocialLoginCallback;

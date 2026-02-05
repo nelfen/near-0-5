@@ -18,7 +18,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoggedIn: () => Boolean(get().accessToken),
   logout: async () => {
     try {
-      await refreshApi.post(API_ROUTES.ENDPOINTS.LOGOUT);
+      await refreshApi.post(API_ROUTES.AUTH.LOGOUT);
     } catch (error) {
       if (!isAuthExpectedError(error)) {
         console.error('로그아웃 API 호출 실패:', error);
@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   refreshAccessToken: async () => {
     try {
       const response = await refreshApi.post<{ accessToken: string }>(
-        API_ROUTES.ENDPOINTS.REFRESH_ACCESS_TOKEN,
+        API_ROUTES.AUTH.REFRESH_ACCESS_TOKEN,
       );
       const refreshedAccessToken = response.data?.accessToken ?? null;
       set({ accessToken: refreshedAccessToken });

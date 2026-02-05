@@ -1,25 +1,9 @@
-import { Link, useSearchParams } from 'react-router';
+import { Link } from 'react-router';
 
-import { KakaoIcon } from '@/assets';
-import { Button } from '@/components';
-import { API_ROUTES, ROUTES_PATHS } from '@/constants';
-
-const REDIRECT_PARAM = 'redirect';
-const REDIRECT_KEY = 'login_redirect';
+import { ROUTES_PATHS } from '@/constants';
+import SocialLoginButtons from '@/features/auth/components/SocialLoginButtons';
 
 export default function LoginPage() {
-  const [searchParams] = useSearchParams();
-
-  const handleKakaoLogin = () => {
-    const redirect = searchParams.get(REDIRECT_PARAM);
-
-    if (redirect) {
-      localStorage.setItem(REDIRECT_KEY, redirect);
-    }
-
-    window.location.href = API_ROUTES.EXTERNAL.KAKAO_LOGIN;
-  };
-
   return (
     <div className="flex min-h-screen">
       {/* 서비스 소개 섹션 */}
@@ -35,14 +19,8 @@ export default function LoginPage() {
           <h1 className="mb-7 text-4xl font-bold text-white">Near 0.5</h1>
           <p className="mb-7 text-gray-400">아티스트와 팬을 연결하는 플랫폼</p>
           <div className="flex w-full flex-col space-y-4">
-            <p className="mb-7 h-8 w-16 text-white">로그인</p>
-            <Button
-              className="h-13 bg-[#fee500] text-black hover:bg-[#f5dc00]"
-              onClick={handleKakaoLogin}
-            >
-              <KakaoIcon />
-              카카오 간편 로그인
-            </Button>
+            <p className="text-6 mb-7 h-8 w-16 font-bold text-white">로그인</p>
+            <SocialLoginButtons />
           </div>
         </div>
       </div>
