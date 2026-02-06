@@ -9,10 +9,12 @@ type UseArtistListQueryParams = {
   pageSize: number;
 };
 
-export const useArtistListQuery = ({
-  page,
-  pageSize,
-}: UseArtistListQueryParams) =>
+export const useArtistListQuery = (
+  { page = 1, pageSize = 10 }: UseArtistListQueryParams = {
+    page: 1,
+    pageSize: 10,
+  },
+) =>
   useQuery<ArtistList>({
     placeholderData: keepPreviousData,
     queryFn: () => fetchArtistList({ page, pageSize }),
