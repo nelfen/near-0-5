@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { Outlet } from 'react-router';
 
 import { Header, Sidebar, Toaster } from '@/components';
+import { HEADER_HEIGHT } from '@/constants/layout';
 import { cn } from '@/utils';
 
 export default function MainLayout() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#1A1F2E]">
-      <Header onMenuClick={() => setIsOpen(!isOpen)} />
+    <div className="min-h-screen">
+      <Header onMenuClick={() => setIsOpen(prev => !prev)} />
 
-      <div className="flex pt-15">
+      <div className="flex" style={{ paddingTop: HEADER_HEIGHT }}>
         <Sidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
         <main
           className={cn(
