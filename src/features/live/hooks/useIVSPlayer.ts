@@ -24,25 +24,29 @@ export const useIVSPlayer = ({ playbackUrl }: UseIVSPlayerProps) => {
       return;
     }
 
-    const PLAYER_CLASSES = ['vjs-big-play-centered'];
-
     const videoElement = document.createElement('video-js');
-    videoElement.classList.add(...PLAYER_CLASSES);
+    videoElement.classList.add(
+      'vjs-big-play-centered',
+      'vjs-fluid',
+      'vjs-fill',
+    );
 
     containerRef.current.appendChild(videoElement);
 
-    const videoJsOptions = {
+    const player = videojs(videoElement, {
       autoplay: true,
       controls: true,
+      fill: true,
+      fluid: true,
+      responsive: true,
       sources: [
         {
           src: playbackUrl,
           type: 'application/x-mpegURL',
         },
       ],
-    };
+    });
 
-    const player = videojs(videoElement, videoJsOptions);
     playerRef.current = player;
 
     return () => {
