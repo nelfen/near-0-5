@@ -91,6 +91,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
                 return (
                   <DropdownItem
+                    className="focus:bg-transparent data-highlighted:bg-transparent"
                     key={item.label}
                     onSelect={() => {
                       navigate(item.path);
@@ -100,9 +101,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                     <div
                       className={cn(
                         'flex w-full items-center gap-3 rounded-xl px-3 py-3 transition-all sm:px-4',
-                        isActive
-                          ? 'bg-[#dc196d] text-white shadow-md'
-                          : 'text-[#c7c9d9] hover:bg-white/10',
+                        isActive && 'bg-[#dc196d] text-white shadow-md',
                       )}
                     >
                       <item.icon size={20} />
