@@ -29,7 +29,6 @@ export default function ConcertDetailPage() {
     e.currentTarget.src = ProfileMockIcon;
   };
 
-  // ✅ 안전 가드 (먼저 실행)
   if (isLoading || isError || !streamDetail) {
     return (
       <div className="p-8 text-white">
@@ -38,14 +37,13 @@ export default function ConcertDetailPage() {
     );
   }
 
-  // ✅ streamDetail 보장 이후 계산
   const isLive = streamDetail.status === 'LIVE';
 
   const buttonText =
     streamDetail.status === 'LIVE'
       ? '보러가기'
       : streamDetail.status === 'READY'
-        ? '라이브 준비 상태입니다. 시간을 확인 해주세요!'
+        ? '라이브 준비 상태입니다'
         : '종료된 라이브입니다.';
 
   const mainArtist =
