@@ -41,25 +41,20 @@ export default function StreamingPage() {
   }, [isChatOpen]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-[#070913]">
+    <div className="flex min-h-0 flex-1 flex-col bg-[#1A1F2E] pt-4">
       {/* Desktop */}
       <div
-        className={cn(streamLayoutVariants({ layout: 'desktop' }))}
+        className={cn(streamLayoutVariants({ layout: 'desktop' }), 'pb-10')}
         style={{
           flex: 1,
           gridTemplateColumns: isChatOpen
-            ? 'minmax(0,1fr) minmax(420px, 30%)'
-            : 'minmax(0,1fr) 0px',
+            ? 'minmax(0, 1fr) 460px'
+            : 'minmax(0, 1fr) 0px',
           minHeight: 'clamp(600px, 80vh, 900px)',
         }}
       >
-        <div
-          className={cn(
-            'flex min-h-0 flex-col gap-4',
-            !isChatOpen && 'mx-auto w-full max-w-main',
-          )}
-        >
-          <div className="relative w-full shrink-0 overflow-hidden rounded-xl bg-[#000000]">
+        <div className="flex min-h-0 w-full flex-col gap-4 overflow-hidden px-4 transition-all duration-300 ease-out">
+          <div className="relative max-h-[70vh] w-full shrink-0 overflow-hidden rounded-xl bg-black">
             {isStreamLive ? (
               <StreamPlayer playbackUrl={playbackUrl} />
             ) : (
@@ -90,7 +85,7 @@ export default function StreamingPage() {
         <div
           className={cn(
             chatWrapperVariants({ size: 'desktop' }),
-            'flex flex-col overflow-hidden transition-all duration-300',
+            'flex flex-col overflow-hidden pr-4 transition-all duration-300',
             'h-[clamp(600px,80vh,900px)]',
             !isChatOpen && 'pointer-events-none opacity-0',
           )}

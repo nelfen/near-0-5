@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { api } from '@/api/api';
 
-const FAVORITE_ARTISTS_QUERY_KEY = ['users', 'me', 'favorite-artists'] as const;
+import { FAVORITE_ARTISTS_QUERY_KEY } from '../constants/queryKeys';
 
 export function useFavoriteArtistMutation() {
   const queryClient = useQueryClient();

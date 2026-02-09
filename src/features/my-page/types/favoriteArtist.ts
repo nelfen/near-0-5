@@ -1,20 +1,21 @@
 export type FavoriteArtist = {
-  category: string;
-  followerCount?: number;
-  id: string;
-  imageUrl: null | string;
+  agency: string;
+  description?: null | string;
+  followerCount: number;
+  id: number;
   name: string;
+  profileImage: null | string;
 };
 
 export type FavoriteArtistApiItem = {
   agency: string;
-  category_type: string;
-  created_at: string;
-  group_type: string;
+  categoryType: string;
+  createdAt: string;
+  groupType: string;
   id: number;
-  member_count: number;
+  memberCount: number;
   name: string;
-  profile_image: null | string;
+  profileImage: null | string;
 };
 export type FavoriteArtistsResponse = {
   items: FavoriteArtistApiItem[];

@@ -31,7 +31,7 @@ export default function ChatPanel({
   };
 
   return (
-    <section className="flex h-full max-h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-[#282828] bg-[#101828]">
+    <section className="flex h-full max-h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-[#282828] bg-[#10131C]">
       <header className="shrink-0 border-b border-[#282828] px-4 py-3">
         <span className="text-sm font-semibold text-white">실시간 채팅</span>
       </header>

@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 
 import {
@@ -22,6 +23,8 @@ export default function ProfileEditDialog({
   nickname,
 }: ProfileEditDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDuplicateOpen, setIsDuplicateOpen] = useState(false);
+
   const [nextNickname, setNextNickname] = useState(nickname);
   const [nextBio, setNextBio] = useState(bio ?? '');
 
@@ -38,24 +41,29 @@ export default function ProfileEditDialog({
   const handleSave = () => {
     mutate(
       { bio: nextBio, nickname: nextNickname },
-      { onSuccess: () => setIsOpen(false) },
+      {
+        onError: error => {
+          if (error instanceof AxiosError && error.response?.status === 409) {
+            setIsDuplicateOpen(true);
+          }
+        },
+        onSuccess: () => setIsOpen(false),
+      },
     );
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={handleOpenChange}>
-      <ModalTrigger asChild>
-        <Button size="sm" variant="ghost">
-          프로필 편집
-        </Button>
-      </ModalTrigger>
+    <>
+      <Modal isOpen={isOpen} onOpenChange={handleOpenChange}>
+        <ModalTrigger asChild>
+          <Button size="sm" variant="ghost">
+            프로필 편집
+          </Button>
+        </ModalTrigger>
 
-      <ModalContent className="border-0 bg-transparent p-0">
-        <div className="w-full max-w-md rounded-2xl bg-[#0B0F1A] p-6 text-white shadow-xl">
+        <ModalContent className="w-full max-w-md rounded-2xl bg-[#0B0F1A] p-6 text-white shadow-xl">
           <ModalHeader>
-            <div className="text-xl text-white">
-              <ModalTitle>회원 탈퇴</ModalTitle>
-            </div>
+            <ModalTitle className="text-xl text-white">프로필 편집</ModalTitle>
           </ModalHeader>
 
           <div className="mt-6 flex flex-col gap-4">
@@ -96,8 +104,24 @@ export default function ProfileEditDialog({
               저장
             </Button>
           </ModalFooter>
-        </div>
-      </ModalContent>
-    </Modal>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isDuplicateOpen} onOpenChange={setIsDuplicateOpen}>
+        <ModalContent className="w-full max-w-sm rounded-2xl bg-[#0B0F1A] p-6 text-white shadow-xl">
+          <ModalHeader>
+            <ModalTitle className="text-white">닉네임 중복</ModalTitle>
+          </ModalHeader>
+
+          <p className="mt-2 text-sm text-white/70">
+            이미 사용 중인 닉네임입니다.
+          </p>
+
+          <ModalFooter className="mt-6">
+            <Button onClick={() => setIsDuplicateOpen(false)}>확인</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
