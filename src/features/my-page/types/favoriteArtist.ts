@@ -9,13 +9,13 @@ export type FavoriteArtist = {
 
 export type FavoriteArtistApiItem = {
   agency: string;
-  category_type: string;
-  created_at: string;
-  group_type: string;
+  categoryType: string;
+  createdAt: string;
+  groupType: string;
   id: number;
-  member_count: number;
+  memberCount: number;
   name: string;
-  profile_image: null | string;
+  profileImage: null | string;
 };
 export type FavoriteArtistsResponse = {
   items: FavoriteArtistApiItem[];

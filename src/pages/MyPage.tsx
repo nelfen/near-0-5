@@ -15,7 +15,7 @@ import {
 import NotificationSettingsCard from '@/features/my-page/components/NotificationSettingsCard';
 import { useFavoriteArtistsQuery } from '@/features/my-page/hooks/useFavoriteArtistsQuery';
 import { useMyProfileQuery } from '@/features/my-page/hooks/useMyProfileQuery';
-import { useUpdateNotificationSettings } from '@/features/my-page/hooks/useUpdateNotificationSettings';
+import { useNotificationSettings } from '@/features/notification/hooks/useNotificationSettings';
 
 export default function MyPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,16 +33,20 @@ export default function MyPage() {
 
   const { data: favoriteArtists = [] } = useFavoriteArtistsQuery();
   const { data: profile, refetch } = useMyProfileQuery();
-  const { isPending, mutate } = useUpdateNotificationSettings();
+  console.log('MyPage profile:', profile);
+  const {
+    isLoading: isSettingsLoading,
+    isUpdating,
+    settings: notificationSettings,
+    updateSettings,
+  } = useNotificationSettings();
 
   if (!profile) {
     return null;
   }
 
-  const profileImage =
-    profile.profile_img_url != null
-      ? `${profile.profile_img_url}?t=${Date.now()}`
-      : null;
+  // const profileImage =
+  //   profile.profile_img_url != null ? `${profile.profile_img_url}` : null;
 
   const handleImageChange = async (file: File) => {
     await uploadProfileImage(file);
@@ -50,27 +54,28 @@ export default function MyPage() {
   };
 
   const notificationSettingsUI = {
-    live_start: profile.notification_settings?.live_start_notification ?? false,
-    new_content_from_favorite_artists:
-      profile.notification_settings?.new_content_from_favorite_artists ?? false,
-    newsletter: profile.notification_settings?.marketing_consent ?? false,
+    live_start: notificationSettings?.live ?? false,
+    new_content_from_favorite_artists: notificationSettings?.artist ?? false,
+    newsletter: notificationSettings?.marketing ?? false,
   };
 
   const handleToggleNotification = (
     key: keyof typeof notificationSettingsUI,
   ) => {
+    if (!notificationSettings) return;
+
     const nextUI = {
       ...notificationSettingsUI,
       [key]: !notificationSettingsUI[key],
     };
 
-    mutate({
-      live_start_notification: nextUI.live_start,
-      marketing_consent: nextUI.newsletter,
-      new_content_from_favorite_artists:
-        nextUI.new_content_from_favorite_artists,
+    updateSettings({
+      artist: nextUI.new_content_from_favorite_artists,
+      live: nextUI.live_start,
+      marketing: nextUI.newsletter,
     });
   };
+  console.log('profileImage:', profile.profileImgUrl);
 
   return (
     <div className="min-h-screen bg-[#101828]">
@@ -81,7 +86,7 @@ export default function MyPage() {
             favoriteArtistCount={favoriteArtists.length}
             nickname={profile.nickname}
             onImageChange={handleImageChange}
-            profileImage={profileImage}
+            profileImage={profile.profileImgUrl ?? null}
           />
         </div>
       </section>
@@ -118,11 +123,13 @@ export default function MyPage() {
             </div>
 
             <div className="rounded-2xl bg-[#1A1F2E] p-8">
-              <NotificationSettingsCard
-                isPending={isPending}
-                onToggle={handleToggleNotification}
-                settings={notificationSettingsUI}
-              />
+              {!isSettingsLoading && (
+                <NotificationSettingsCard
+                  isPending={isUpdating}
+                  onToggle={handleToggleNotification}
+                  settings={notificationSettingsUI}
+                />
+              )}
             </div>
 
             <div className="rounded-2xl bg-[#1A1F2E] p-8">

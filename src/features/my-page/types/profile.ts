@@ -11,15 +11,15 @@ export type Profile = {
   favorite_artists: {
     id: number;
     name: string;
-    profile_image: null | string;
+    profileImage: null | string;
   }[];
   id: number;
   nickname: string;
 
-  notification_settings: NotificationSettings;
+  notificationSettings: NotificationSettings;
 
-  preferred_categories: string[];
+  preferredCategories: string[];
 
-  profile_img_url: null | string;
+  profileImgUrl: null | string;
   real_name: null | string;
 };

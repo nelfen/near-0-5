@@ -1,5 +1,5 @@
 import { CameraIcon } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { Button, Input } from '@/components';
 
@@ -7,7 +7,7 @@ type ProfileSummaryProps = {
   bio?: string;
   favoriteArtistCount: number;
   nickname: string;
-  onImageChange?: (file: File) => void;
+  onImageChange?: (file: File) => Promise<void> | void;
   profileImage?: null | string;
 };
 
@@ -19,7 +19,7 @@ export default function ProfileSummary({
   profileImage,
 }: ProfileSummaryProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const [previewUrl, setPreviewUrl] = useState<null | string>(null);
   return (
     <section className="flex items-center gap-6">
       <div className="relative h-24 w-24">
@@ -34,8 +34,7 @@ export default function ProfileSummary({
             <img
               alt="프로필 이미지"
               className="h-full w-full rounded-full object-cover"
-              key={profileImage}
-              src={profileImage}
+              src={profileImage ?? previewUrl}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-sm text-[#9ca3af]">
@@ -51,12 +50,17 @@ export default function ProfileSummary({
         <Input
           accept="image/*"
           className="hidden"
-          onChange={e => {
+          onChange={async e => {
             const file = e.target.files?.[0];
-            if (file && onImageChange) {
-              onImageChange(file);
-              e.target.value = '';
-            }
+            if (!file || !onImageChange) return;
+
+            const localUrl = URL.createObjectURL(file);
+            setPreviewUrl(localUrl);
+
+            await onImageChange(file);
+
+            setPreviewUrl(null);
+            e.target.value = '';
           }}
           ref={fileInputRef}
           type="file"
