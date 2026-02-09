@@ -20,6 +20,13 @@ export default function ConcertDetailPage() {
   const { navigateToArtist } = useArtistNavigation();
 
   const { isError, isLoading, streamDetail } = useStreamSession(sessionId);
+  const isLive = streamDetail.status === 'LIVE';
+  const buttonText =
+    streamDetail.status === 'LIVE'
+      ? '보러가기'
+      : streamDetail.status === 'READY'
+        ? '라이브 준비 상태입니다. 시간을 확인 해주세요!'
+        : '종료된 라이브입니다.';
 
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = ConcertMockImage;
@@ -161,11 +168,12 @@ export default function ConcertDetailPage() {
 
             <Button
               className="h-14 w-full py-4 text-lg font-bold shadow-lg shadow-pink-500/20"
+              disabled={!isLive}
               onClick={handleGoWatch}
               variant="pink"
             >
               <PlayIcon />
-              보러가기
+              {buttonText}
             </Button>
           </div>
         </aside>
